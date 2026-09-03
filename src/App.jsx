@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { UploadCloud, FileText } from 'lucide-react';
 import FlipBookViewer from './components/FlipBookViewer';
+import PandaWaving from './components/PandaWaving';
 import './index.css';
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
       {!pdfFile ? (
         <>
           <div className="header">
-            <h1>Antigravity Reader</h1>
+            <PandaWaving />
             <p>Experience your PDFs like real books with premium 3D page flipping.</p>
           </div>
 
