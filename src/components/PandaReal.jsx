@@ -99,13 +99,10 @@ const RealisticEye = ({ config, pupilOffset, isBlinking }) => {
   return (
     <div style={{
       position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-      // Blinking scales the eye vertically
-      transform: `scaleY(${isBlinking ? 0 : 1})`,
-      transformOrigin: `${cx} ${cy}`,
-      transition: isBlinking ? 'transform 0.1s ease-in' : 'transform 0.15s ease-out',
       pointerEvents: 'none'
     }}>
-      {/* 1. Base Iris: Covers the original eye in the image with a beautiful blue gradient */}
+      {/* 1. Base Socket: PERMANENTLY Covers the original eye with white. 
+          It NEVER scales down, so the old eye is ALWAYS hidden. */}
       <div style={{
         position: 'absolute',
         left: `calc(${cx} - ${rx})`,
@@ -113,49 +110,63 @@ const RealisticEye = ({ config, pupilOffset, isBlinking }) => {
         width: `calc(${rx} * 2)`,
         height: `calc(${ry} * 2)`,
         borderRadius: '50%',
-        background: 'radial-gradient(circle at 50% 30%, #60a5fa, #2563eb, #1e3a8a)', // Bright to dark blue iris
-        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)' // Inner shadow for depth
-      }} />
+        backgroundColor: 'white', // White sclera
+        boxShadow: 'inset 0 0 8px rgba(0,0,0,0.6)', // Inner shadow for depth
+        overflow: 'hidden' // Keeps everything cleanly inside the eye socket
+      }}>
+        {/* 2. Moving Black Pupil */}
+        <div style={{
+          position: 'absolute',
+          left: '50%',
+          top: '50%',
+          // Pupil is large inside the eye
+          width: '75%',
+          height: '75%',
+          marginLeft: '-37.5%', // center it
+          marginTop: '-37.5%',  // center it
+          borderRadius: '50%',
+          backgroundColor: '#020617', // Pitch black pupil
+          // Instant mouse tracking
+          transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px)`,
+          boxShadow: '0 0 5px rgba(0,0,0,0.9)'
+        }} />
 
-      {/* 2. Moving Black Pupil */}
-      <div style={{
-        position: 'absolute',
-        // Center the pupil inside the iris
-        left: `calc(${cx} - ${rx} * 0.65)`,
-        top: `calc(${cy} - ${ry} * 0.65)`,
-        width: `calc(${rx} * 1.3)`,
-        height: `calc(${ry} * 1.3)`,
-        borderRadius: '50%',
-        backgroundColor: '#020617', // Pitch black pupil
-        // Instant mouse tracking for the pupil
-        transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px)`,
-        boxShadow: '0 0 5px rgba(0,0,0,0.9)'
-      }} />
+        {/* 3. Fixed White Reflections (Highlights) - Stay still for realism! */}
+        {/* Primary Highlight */}
+        <div style={{
+          position: 'absolute',
+          left: '55%',
+          top: '15%',
+          width: '35%',
+          height: '35%',
+          borderRadius: '50%',
+          backgroundColor: 'white',
+          boxShadow: '0 0 4px rgba(255,255,255,0.9)'
+        }} />
+        
+        {/* Secondary Highlight */}
+        <div style={{
+          position: 'absolute',
+          left: '20%',
+          top: '55%',
+          width: '15%',
+          height: '15%',
+          borderRadius: '50%',
+          backgroundColor: 'white',
+          opacity: 0.8
+        }} />
 
-      {/* 3. Fixed White Reflections (Highlights) - These stay completely still for realism! */}
-      {/* Primary Highlight */}
-      <div style={{
-        position: 'absolute',
-        left: `calc(${cx} + ${rx} * 0.15)`,
-        top: `calc(${cy} - ${ry} * 0.45)`,
-        width: `calc(${rx} * 0.45)`,
-        height: `calc(${ry} * 0.45)`,
-        borderRadius: '50%',
-        backgroundColor: 'white',
-        boxShadow: '0 0 4px rgba(255,255,255,0.9)'
-      }} />
-      
-      {/* Secondary Highlight */}
-      <div style={{
-        position: 'absolute',
-        left: `calc(${cx} - ${rx} * 0.35)`,
-        top: `calc(${cy} + ${ry} * 0.25)`,
-        width: `calc(${rx} * 0.15)`,
-        height: `calc(${ry} * 0.15)`,
-        borderRadius: '50%',
-        backgroundColor: 'white',
-        opacity: 0.9
-      }} />
+        {/* 4. The Eyelid (Blinking mechanism) 
+            Drops down from the top to cover the eye in black (matching the panda's black eye patch) */}
+        <div style={{
+          position: 'absolute',
+          top: 0, left: 0, width: '100%', height: '100%',
+          backgroundColor: '#111', // Very dark grey/black to match fur
+          transformOrigin: 'top',
+          transform: `scaleY(${isBlinking ? 1 : 0})`,
+          transition: isBlinking ? 'transform 0.1s ease-in' : 'transform 0.15s ease-out'
+        }} />
+      </div>
     </div>
   );
 };
