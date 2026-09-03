@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// --- EYE ALIGNMENT CONFIGURATION ---
-// Tweak these values if the animated eyes don't perfectly align with the image's eyes!
-// rx and ry control the width/height of the eye cutout.
+// --- REALISTIC EYE CONFIGURATION ---
+// rx and ry control the width/height of the eye overlay.
 // cx and cy control the position.
-const LEFT_EYE = { cx: '35%', cy: '36%', rx: '8%', ry: '10%' };
-const RIGHT_EYE = { cx: '65%', cy: '36%', rx: '8%', ry: '10%' };
-const MAX_EYE_MOVE = 7; // Maximum pixels the eye can move to track the mouse
+const LEFT_EYE = { cx: '38%', cy: '39%', rx: '6%', ry: '7.5%' };
+const RIGHT_EYE = { cx: '62%', cy: '39%', rx: '6%', ry: '7.5%' };
+const MAX_PUPIL_MOVE = 8; // Maximum pixels the black pupil can move
 // -----------------------------------
 
 const PandaReal = () => {
@@ -52,8 +51,8 @@ const PandaReal = () => {
     const clampedY = Math.max(-1, Math.min(1, percentY));
 
     setPupilOffset({
-      x: clampedX * MAX_EYE_MOVE,
-      y: clampedY * MAX_EYE_MOVE
+      x: clampedX * MAX_PUPIL_MOVE,
+      y: clampedY * MAX_PUPIL_MOVE
     });
   }, [mousePos]);
 
@@ -78,45 +77,85 @@ const PandaReal = () => {
           style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, objectFit: 'contain' }} 
         />
         
-        {/* White patches to hide the original eyes underneath when the animated eyes move */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: 'white',
-          clipPath: `ellipse(${LEFT_EYE.rx} ${LEFT_EYE.ry} at ${LEFT_EYE.cx} ${LEFT_EYE.cy})`
-        }} />
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: 'white',
-          clipPath: `ellipse(${RIGHT_EYE.rx} ${RIGHT_EYE.ry} at ${RIGHT_EYE.cx} ${RIGHT_EYE.cy})`
-        }} />
-
-        {/* Animated Eyes Layer */}
-        <div style={{
-          position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
-          // Scale Y to 0 when blinking to create a smooth eyelid closing effect
-          transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px) scaleY(${isBlinking ? 0 : 1})`,
-          transformOrigin: '50% 36%', 
-          // Use a very snappy transition for tracking to match mouse speed perfectly, but keep blink smooth
-          transition: isBlinking ? 'transform 0.15s ease-in' : 'transform 0.05s linear' 
-        }}>
-          {/* Left Eye Cutout */}
-          <img 
-            src="/panda_real.png" 
-            style={{ 
-              width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, objectFit: 'contain',
-              clipPath: `ellipse(${LEFT_EYE.rx} ${LEFT_EYE.ry} at ${LEFT_EYE.cx} ${LEFT_EYE.cy})`
-            }} 
-          />
-          {/* Right Eye Cutout */}
-          <img 
-            src="/panda_real.png" 
-            style={{ 
-              width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, objectFit: 'contain',
-              clipPath: `ellipse(${RIGHT_EYE.rx} ${RIGHT_EYE.ry} at ${RIGHT_EYE.cx} ${RIGHT_EYE.cy})`
-            }} 
-          />
-        </div>
+        {/* Realistic Eyes Overlay */}
+        <RealisticEye 
+          config={LEFT_EYE} 
+          pupilOffset={pupilOffset} 
+          isBlinking={isBlinking} 
+        />
+        <RealisticEye 
+          config={RIGHT_EYE} 
+          pupilOffset={pupilOffset} 
+          isBlinking={isBlinking} 
+        />
       </div>
+    </div>
+  );
+};
+
+const RealisticEye = ({ config, pupilOffset, isBlinking }) => {
+  const { cx, cy, rx, ry } = config;
+
+  return (
+    <div style={{
+      position: 'absolute', top: 0, left: 0, width: '100%', height: '100%',
+      // Blinking scales the eye vertically
+      transform: `scaleY(${isBlinking ? 0 : 1})`,
+      transformOrigin: `${cx} ${cy}`,
+      transition: isBlinking ? 'transform 0.1s ease-in' : 'transform 0.15s ease-out',
+      pointerEvents: 'none'
+    }}>
+      {/* 1. Base Iris: Covers the original eye in the image with a beautiful blue gradient */}
+      <div style={{
+        position: 'absolute',
+        left: `calc(${cx} - ${rx})`,
+        top: `calc(${cy} - ${ry})`,
+        width: `calc(${rx} * 2)`,
+        height: `calc(${ry} * 2)`,
+        borderRadius: '50%',
+        background: 'radial-gradient(circle at 50% 30%, #60a5fa, #2563eb, #1e3a8a)', // Bright to dark blue iris
+        boxShadow: 'inset 0 0 10px rgba(0,0,0,0.8)' // Inner shadow for depth
+      }} />
+
+      {/* 2. Moving Black Pupil */}
+      <div style={{
+        position: 'absolute',
+        // Center the pupil inside the iris
+        left: `calc(${cx} - ${rx} * 0.65)`,
+        top: `calc(${cy} - ${ry} * 0.65)`,
+        width: `calc(${rx} * 1.3)`,
+        height: `calc(${ry} * 1.3)`,
+        borderRadius: '50%',
+        backgroundColor: '#020617', // Pitch black pupil
+        // Instant mouse tracking for the pupil
+        transform: `translate(${pupilOffset.x}px, ${pupilOffset.y}px)`,
+        boxShadow: '0 0 5px rgba(0,0,0,0.9)'
+      }} />
+
+      {/* 3. Fixed White Reflections (Highlights) - These stay completely still for realism! */}
+      {/* Primary Highlight */}
+      <div style={{
+        position: 'absolute',
+        left: `calc(${cx} + ${rx} * 0.15)`,
+        top: `calc(${cy} - ${ry} * 0.45)`,
+        width: `calc(${rx} * 0.45)`,
+        height: `calc(${ry} * 0.45)`,
+        borderRadius: '50%',
+        backgroundColor: 'white',
+        boxShadow: '0 0 4px rgba(255,255,255,0.9)'
+      }} />
+      
+      {/* Secondary Highlight */}
+      <div style={{
+        position: 'absolute',
+        left: `calc(${cx} - ${rx} * 0.35)`,
+        top: `calc(${cy} + ${ry} * 0.25)`,
+        width: `calc(${rx} * 0.15)`,
+        height: `calc(${ry} * 0.15)`,
+        borderRadius: '50%',
+        backgroundColor: 'white',
+        opacity: 0.9
+      }} />
     </div>
   );
 };
