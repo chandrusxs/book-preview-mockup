@@ -73,35 +73,6 @@ function App() {
               file={pdfFile} 
               onClose={() => setPdfFile(null)} 
             />
-            
-            {/* Fake Paws gripping the top of the book */}
-            {/* Left Paw */}
-            <div style={{
-              position: 'absolute',
-              top: '-15px',
-              left: 'calc(50% - 250px)', // adjust based on book width
-              width: '45px',
-              height: '35px',
-              backgroundColor: '#111',
-              borderRadius: '25px',
-              transform: 'rotate(15deg)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(255,255,255,0.1)',
-              zIndex: 20
-            }} />
-            
-            {/* Right Paw */}
-            <div style={{
-              position: 'absolute',
-              top: '-15px',
-              right: 'calc(50% - 250px)', // adjust based on book width
-              width: '45px',
-              height: '35px',
-              backgroundColor: '#111',
-              borderRadius: '25px',
-              transform: 'rotate(-15deg)',
-              boxShadow: '0 4px 6px rgba(0,0,0,0.4), inset 0 -3px 5px rgba(255,255,255,0.1)',
-              zIndex: 20
-            }} />
           </div>
         </div>
       )}
