@@ -67,34 +67,12 @@ const PandaReal = () => {
           position: 'relative', 
           width: '280px', 
           height: '280px',
-          filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.3))',
-          // MASK THE CHECKERBOARD BACKGROUND USING CSS RADIAL GRADIENTS
-          // This creates a custom silhouette of the panda to hide the JPG background
-          WebkitMaskImage: `
-            radial-gradient(ellipse 43% 38% at 50% 36%, black 99%, transparent 100%), /* Head */
-            radial-gradient(circle 14% at 22% 20%, black 99%, transparent 100%), /* Left Ear */
-            radial-gradient(circle 14% at 78% 20%, black 99%, transparent 100%), /* Right Ear */
-            radial-gradient(ellipse 40% 30% at 50% 70%, black 99%, transparent 100%), /* Body */
-            radial-gradient(ellipse 15% 12% at 22% 82%, black 99%, transparent 100%), /* Left Foot */
-            radial-gradient(ellipse 15% 12% at 78% 82%, black 99%, transparent 100%), /* Right Foot */
-            radial-gradient(ellipse 15% 20% at 25% 65%, black 99%, transparent 100%), /* Left Arm */
-            radial-gradient(ellipse 15% 20% at 75% 65%, black 99%, transparent 100%)  /* Right Arm */
-          `,
-          maskImage: `
-            radial-gradient(ellipse 43% 38% at 50% 36%, black 99%, transparent 100%),
-            radial-gradient(circle 14% at 22% 20%, black 99%, transparent 100%),
-            radial-gradient(circle 14% at 78% 20%, black 99%, transparent 100%),
-            radial-gradient(ellipse 40% 30% at 50% 70%, black 99%, transparent 100%),
-            radial-gradient(ellipse 15% 12% at 22% 82%, black 99%, transparent 100%),
-            radial-gradient(ellipse 15% 12% at 78% 82%, black 99%, transparent 100%),
-            radial-gradient(ellipse 15% 20% at 25% 65%, black 99%, transparent 100%),
-            radial-gradient(ellipse 15% 20% at 75% 65%, black 99%, transparent 100%)
-          `
+          filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.3))'
         }}
       >
         {/* Base Image */}
         <img 
-          src="/panda_real.jpg" 
+          src="/panda_real.png" 
           alt="Cute Panda" 
           style={{ width: '100%', height: '100%', position: 'absolute', top: 0, left: 0, objectFit: 'contain' }} 
         />
