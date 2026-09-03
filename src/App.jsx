@@ -36,30 +36,28 @@ function App() {
 
   return (
     <div className="app-container">
-      {!pdfFile ? (
-        <>
-          <div className="header">
-            <PandaReal />
-            <p>Experience your PDFs like real books with premium 3D page flipping.</p>
-          </div>
+      <div className="header" style={pdfFile ? { marginBottom: '20px' } : {}}>
+        <PandaReal />
+        {!pdfFile && <p>Experience your PDFs like real books with premium 3D page flipping.</p>}
+      </div>
 
-          <label
-            className={`upload-section ${isDragging ? 'drag-active' : ''}`}
-            onDragOver={onDragOver}
-            onDragLeave={onDragLeave}
-            onDrop={onDrop}
-          >
-            <UploadCloud className="upload-icon" />
-            <span className="upload-label">Click to upload or drag & drop</span>
-            <span className="upload-subtext">PDF documents only</span>
-            <input 
-              type="file" 
-              className="file-input" 
-              accept=".pdf,application/pdf"
-              onChange={onFileChange}
-            />
-          </label>
-        </>
+      {!pdfFile ? (
+        <label
+          className={`upload-section ${isDragging ? 'drag-active' : ''}`}
+          onDragOver={onDragOver}
+          onDragLeave={onDragLeave}
+          onDrop={onDrop}
+        >
+          <UploadCloud className="upload-icon" />
+          <span className="upload-label">Click to upload or drag & drop</span>
+          <span className="upload-subtext">PDF documents only</span>
+          <input 
+            type="file" 
+            className="file-input" 
+            accept=".pdf,application/pdf"
+            onChange={onFileChange}
+          />
+        </label>
       ) : (
         <FlipBookViewer 
           file={pdfFile} 

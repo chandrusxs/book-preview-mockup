@@ -11,22 +11,7 @@ const MAX_PUPIL_MOVE = 8; // Maximum pixels the black pupil can move
 const PandaReal = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [pupilOffset, setPupilOffset] = useState({ x: 0, y: 0 });
-  const [isBlinking, setIsBlinking] = useState(false);
   const containerRef = useRef(null);
-
-  // Blinking logic: "blink slow ah"
-  useEffect(() => {
-    let timeout;
-    const blink = () => {
-      setIsBlinking(true);
-      setTimeout(() => setIsBlinking(false), 300); // 300ms is a smooth, slow blink
-      
-      const nextBlink = Math.random() * 4000 + 3000;
-      timeout = setTimeout(blink, nextBlink);
-    };
-    timeout = setTimeout(blink, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
 
   // Mouse tracking: "mouse traccktion speed equal to the cursor" (Instant)
   useEffect(() => {
@@ -81,19 +66,17 @@ const PandaReal = () => {
         <RealisticEye 
           config={LEFT_EYE} 
           pupilOffset={pupilOffset} 
-          isBlinking={isBlinking} 
         />
         <RealisticEye 
           config={RIGHT_EYE} 
           pupilOffset={pupilOffset} 
-          isBlinking={isBlinking} 
         />
       </div>
     </div>
   );
 };
 
-const RealisticEye = ({ config, pupilOffset, isBlinking }) => {
+const RealisticEye = ({ config, pupilOffset }) => {
   const { cx, cy, rx, ry } = config;
 
   return (
@@ -154,17 +137,6 @@ const RealisticEye = ({ config, pupilOffset, isBlinking }) => {
           borderRadius: '50%',
           backgroundColor: 'white',
           opacity: 0.8
-        }} />
-
-        {/* 4. The Eyelid (Blinking mechanism) 
-            Drops down from the top to cover the eye in black (matching the panda's black eye patch) */}
-        <div style={{
-          position: 'absolute',
-          top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: '#111', // Very dark grey/black to match fur
-          transformOrigin: 'top',
-          transform: `scaleY(${isBlinking ? 1 : 0})`,
-          transition: isBlinking ? 'transform 0.1s ease-in' : 'transform 0.15s ease-out'
         }} />
       </div>
     </div>
