@@ -61,9 +61,9 @@ function App() {
           </label>
         </>
       ) : (
-        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '100px' }}>
+        <div style={{ position: 'relative', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', paddingTop: '130px' }}>
           {/* Panda standing behind the book */}
-          <div style={{ position: 'absolute', top: '-50px', zIndex: 0 }}>
+          <div style={{ position: 'absolute', top: '-10px', zIndex: 0 }}>
             <PandaReal />
           </div>
           

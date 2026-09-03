@@ -52,7 +52,9 @@ const PandaReal = () => {
           position: 'relative', 
           width: '280px', 
           height: '280px',
-          filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.3))'
+          filter: 'drop-shadow(0 15px 25px rgba(0,0,0,0.3))',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 60%, transparent 95%)',
+          maskImage: 'linear-gradient(to bottom, black 60%, transparent 95%)'
         }}
       >
         {/* Base Image */}
